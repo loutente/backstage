@@ -27,6 +27,10 @@ import { useTechDocsReader } from '../Reader';
 import { computeTechDocsState } from './state';
 import { useTechDocsSync } from './useTechDocsSync';
 
+/**
+ * Experimental new reader state
+ * @internal
+ */
 export const useTechDocsReaderState = () => {
   const { path, entityName, entityDocs } = useTechDocsReader();
   const techdocsSync = useTechDocsSync(entityName, entityDocs);

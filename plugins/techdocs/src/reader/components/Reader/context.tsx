@@ -29,7 +29,13 @@ import { useApi } from '@backstage/core-plugin-api';
 import { techdocsStorageApiRef } from '../../../api';
 import { useTechDocsReaderPage } from '../TechDocsReaderPage';
 
-const useEntityDocs = (path: string, entityName: EntityName) => {
+/**
+ * Fetches the entity raw docs
+ * @param path - the docs url path
+ * @param entityName - the Backstage entity name
+ * @public
+ */
+export const useEntityDocs = (path: string, entityName: EntityName) => {
   const techdocsStorageApi = useApi(techdocsStorageApiRef);
 
   const entityDocs = useAsyncRetry(async () => {
@@ -39,6 +45,10 @@ const useEntityDocs = (path: string, entityName: EntityName) => {
   return entityDocs;
 };
 
+/**
+ * Backstage entity raw docs
+ * @public
+ */
 export type EntityDocs = ReturnType<typeof useEntityDocs>;
 
 type TechDocsReaderValue = {
@@ -52,11 +62,19 @@ const TechDocsReaderContext = createContext<TechDocsReaderValue>(
   {} as TechDocsReaderValue,
 );
 
-type TechDocsReaderProviderProps = PropsWithChildren<{
+/**
+ * Props for {@link TechDocsReaderProvider}
+ * @public
+ */
+export type TechDocsReaderProviderProps = PropsWithChildren<{
   entityName: EntityName;
   onReady?: () => void;
 }>;
 
+/**
+ * Provides access to the Reader context
+ * @public
+ */
 export const TechDocsReaderProvider = ({
   children,
   entityName,
