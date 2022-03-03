@@ -20,14 +20,31 @@ import React, {
   createContext,
   useContext,
 } from 'react';
-import { useParams } from 'react-router-dom';
+
+import useAsyncRetry from 'react-use/lib/useAsyncRetry';
 
 import { EntityName } from '@backstage/catalog-model';
+import { useApi } from '@backstage/core-plugin-api';
 
-import { useReaderState } from '../useReaderState';
+import { techdocsStorageApiRef } from '../../../api';
+import { useTechDocsReaderPage } from '../TechDocsReaderPage';
 
-type TechDocsReaderValue = ReturnType<typeof useReaderState> & {
+const useEntityDocs = (path: string, entityName: EntityName) => {
+  const techdocsStorageApi = useApi(techdocsStorageApiRef);
+
+  const entityDocs = useAsyncRetry(async () => {
+    return await techdocsStorageApi.getEntityDocs(entityName, path);
+  }, [path]);
+
+  return entityDocs;
+};
+
+export type EntityDocs = ReturnType<typeof useEntityDocs>;
+
+type TechDocsReaderValue = {
+  path: string;
   entityName: EntityName;
+  entityDocs: EntityDocs;
   setReady: () => void;
 };
 
@@ -45,11 +62,15 @@ export const TechDocsReaderProvider = ({
   entityName,
   onReady = () => {},
 }: TechDocsReaderProviderProps) => {
-  const { '*': path } = useParams();
-  const { kind, namespace, name } = entityName;
-  const state = useReaderState(kind, namespace, name, path);
+  const { path } = useTechDocsReaderPage();
+  const entityDocs = useEntityDocs(path, entityName);
 
-  const value = { ...state, entityName, setReady: onReady };
+  const value = {
+    path,
+    entityName,
+    entityDocs,
+    setReady: onReady,
+  };
 
   return (
     <TechDocsReaderContext.Provider value={value}>

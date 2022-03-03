@@ -15,13 +15,33 @@
  */
 
 import React from 'react';
-import { Progress } from '@backstage/core-components';
+
 import { CircularProgress, Button, makeStyles } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
+
+import { Progress } from '@backstage/core-components';
 
 import { TechDocsBuildLogs } from '../TechDocsBuildLogs';
 import { TechDocsNotFound } from '../TechDocsNotFound';
 import { useTechDocsReader } from '../Reader';
+import { computeTechDocsState } from './state';
+import { useTechDocsSync } from './useTechDocsSync';
+
+export const useTechDocsReaderState = () => {
+  const { path, entityName, entityDocs } = useTechDocsReader();
+  const techdocsSync = useTechDocsSync(entityName, entityDocs);
+  const state = computeTechDocsState(entityDocs, techdocsSync);
+
+  return {
+    path,
+    state,
+    content: entityDocs.loading ? '' : entityDocs.value,
+    contentReload: entityDocs.retry,
+    contentErrorMessage: entityDocs.error?.toString(),
+    syncErrorMessage: techdocsSync.error?.toString(),
+    buildLog: techdocsSync.log,
+  };
+};
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -54,7 +74,7 @@ export const TechDocsStateIndicator = () => {
     contentErrorMessage,
     syncErrorMessage,
     buildLog,
-  } = useTechDocsReader();
+  } = useTechDocsReaderState();
 
   const ReaderProgress = state === 'CHECKING' ? <Progress /> : null;
 
@@ -94,7 +114,7 @@ export const TechDocsStateIndicator = () => {
         variant="outlined"
         severity="success"
         action={
-          <Button color="inherit" onClick={() => contentReload()}>
+          <Button color="inherit" onClick={contentReload}>
             Refresh
           </Button>
         }
