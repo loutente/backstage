@@ -1,5 +1,11 @@
 # @backstage/cli
 
+## 0.15.1
+
+### Patch Changes
+
+- d3d1b82198: chore(deps): bump `minimatch` from 5.0.0 to 5.0.1
+
 ## 0.15.0
 
 ### Minor Changes

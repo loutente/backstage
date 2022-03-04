@@ -1,5 +1,13 @@
 # @backstage/plugin-catalog-react
 
+## 0.8.1
+
+### Patch Changes
+
+- 2986f8e09d: Fixed EntityOwnerPicker and OwnershipCard url filter issue with more than 21 owners
+- Updated dependencies
+  - @backstage/core-components@0.9.1
+
 ## 0.8.0
 
 ### Minor Changes

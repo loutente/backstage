@@ -1,5 +1,14 @@
 # @backstage/plugin-scaffolder
 
+## 0.14.1
+
+### Patch Changes
+
+- d741c97b98: Render markdown for description in software templates
+- Updated dependencies
+  - @backstage/core-components@0.9.1
+  - @backstage/plugin-catalog-react@0.8.1
+
 ## 0.14.0
 
 ### Minor Changes
